@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- <TargetFramework>netstandard2.0</TargetFramework> -->
+    <TargetFrameworks>netstandard2.0;net45;net452;net46</TargetFrameworks>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Axon.MessagePack.snk</AssemblyOriginatorKeyFile>
+    <Company>Axon</Company>
+    <Authors>Joe Lekie</Authors>
+    <Version>0.1.0-alpha</Version>
+    <Description>Axon - MessagePack Runtime</Description>
+    <PackageTags>Axon RPC MessagePack MsgPack</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MessagePack" Version="1.7.3.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- <Reference Include="..\common\bin\$(Configuration)\$(TargetFramework)\Axon.Common.dll" /> -->
+    <ProjectReference Include="..\Axon.Common\Axon.Common.csproj" />
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net46'">
+    <Exec Command="copy $(TargetPath) z:\current\bin" />
+  </Target>
+</Project>
