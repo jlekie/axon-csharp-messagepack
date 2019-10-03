@@ -14,6 +14,6 @@
     <PackageReference Include="MessagePack" Version="1.7.3.4" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Axon.Common.csproj" />
+    <ProjectReference Include="..\axon\Axon.Common.csproj" />
   </ItemGroup>
 </Project>
