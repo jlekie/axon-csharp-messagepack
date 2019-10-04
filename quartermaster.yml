@@ -1,0 +1,6 @@
+module: "@jlekie/quartermaster-csproj"
+identifier: axon.messagepack
+projectPath: ./Axon.MessagePack.csproj
+projectReferences:
+  - referenceProperty: AxonCommonProjectPath
+    projectIdentifier: axon.core
