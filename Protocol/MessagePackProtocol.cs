@@ -23,7 +23,7 @@ namespace Axon.MessagePack
         {
             using (var buffer = new MemoryStream())
             {
-                var writer = new MessagePackProtocolWriter(transport, this, buffer);
+                var writer = new MessagePackProtocolWriter(buffer);
                 handler(writer);
 
                 buffer.Position = 0;
@@ -35,7 +35,7 @@ namespace Axon.MessagePack
         {
             using (var buffer = new MemoryStream())
             {
-                var writer = new MessagePackProtocolWriter(transport, this, buffer);
+                var writer = new MessagePackProtocolWriter(buffer);
                 handler(writer);
 
                 buffer.Position = 0;
@@ -49,7 +49,7 @@ namespace Axon.MessagePack
             var receivedData = await transport.Receive();
 
             var buffer = new MemoryStream(receivedData.Payload);
-            var reader = new MessagePackProtocolReader(transport, this, buffer);
+            var reader = new MessagePackProtocolReader(buffer);
 
             handler(reader, receivedData.Metadata);
         }
@@ -58,7 +58,7 @@ namespace Axon.MessagePack
             var receivedData = await transport.Receive();
 
             var buffer = new MemoryStream(receivedData.Payload);
-            var reader = new MessagePackProtocolReader(transport, this, buffer);
+            var reader = new MessagePackProtocolReader(buffer);
 
             var result = handler(reader, receivedData.Metadata);
 
@@ -69,7 +69,7 @@ namespace Axon.MessagePack
             var receivedData = await transport.Receive(messageId);
 
             var buffer = new MemoryStream(receivedData.Payload);
-            var reader = new MessagePackProtocolReader(transport, this, buffer);
+            var reader = new MessagePackProtocolReader(buffer);
 
             handler(reader, receivedData.Metadata);
         }
@@ -78,7 +78,7 @@ namespace Axon.MessagePack
             var receivedData = await transport.Receive(messageId);
 
             var buffer = new MemoryStream(receivedData.Payload);
-            var reader = new MessagePackProtocolReader(transport, this, buffer);
+            var reader = new MessagePackProtocolReader(buffer);
 
             var result = handler(reader, receivedData.Metadata);
 
@@ -90,7 +90,7 @@ namespace Axon.MessagePack
             var receivedData = await transport.ReceiveTagged();
 
             var buffer = new MemoryStream(receivedData.Message.Payload);
-            var reader = new MessagePackProtocolReader(transport, this, buffer);
+            var reader = new MessagePackProtocolReader(buffer);
 
             handler(reader, receivedData.Id, receivedData.Message.Metadata);
         }
@@ -99,7 +99,7 @@ namespace Axon.MessagePack
             var receivedData = await transport.ReceiveTagged();
 
             var buffer = new MemoryStream(receivedData.Message.Payload);
-            var reader = new MessagePackProtocolReader(transport, this, buffer);
+            var reader = new MessagePackProtocolReader(buffer);
 
             var result = handler(reader, receivedData.Id, receivedData.Message.Metadata);
 
@@ -111,7 +111,7 @@ namespace Axon.MessagePack
             Func<Task<TransportMessage>> receiveHandler;
             using (var buffer = new MemoryStream())
             {
-                var writer = new MessagePackProtocolWriter(transport, this, buffer);
+                var writer = new MessagePackProtocolWriter(buffer);
                 handler(writer);
 
                 buffer.Position = 0;
@@ -123,7 +123,7 @@ namespace Axon.MessagePack
                 var receivedData = await receiveHandler();
 
                 var buffer = new MemoryStream(receivedData.Payload);
-                var reader = new MessagePackProtocolReader(transport, this, buffer);
+                var reader = new MessagePackProtocolReader(buffer);
 
                 readHandler(reader, receivedData.Metadata);
             });
@@ -133,7 +133,7 @@ namespace Axon.MessagePack
             Func<Task<TransportMessage>> receiveHandler;
             using (var buffer = new MemoryStream())
             {
-                var writer = new MessagePackProtocolWriter(transport, this, buffer);
+                var writer = new MessagePackProtocolWriter(buffer);
                 handler(writer);
 
                 buffer.Position = 0;
@@ -145,7 +145,7 @@ namespace Axon.MessagePack
                 var receivedData = await receiveHandler();
 
                 var buffer = new MemoryStream(receivedData.Payload);
-                var reader = new MessagePackProtocolReader(transport, this, buffer);
+                var reader = new MessagePackProtocolReader(buffer);
 
                 return readHandler(reader, receivedData.Metadata);
             });
@@ -184,8 +184,7 @@ namespace Axon.MessagePack
     {
         public Stream DecoderStream { get; private set; }
 
-        public MessagePackProtocolReader(ITransport transport, IProtocol protocol, Stream decoderStream)
-            : base(transport, protocol)
+        public MessagePackProtocolReader(Stream decoderStream)
         {
             this.DecoderStream = decoderStream;
         }
@@ -243,8 +242,7 @@ namespace Axon.MessagePack
     {
         public Stream EncoderStream { get; private set; }
 
-        public MessagePackProtocolWriter(ITransport transport, IProtocol protocol, Stream encoderStream)
-            : base(transport, protocol)
+        public MessagePackProtocolWriter(Stream encoderStream)
         {
             this.EncoderStream = encoderStream;
         }
