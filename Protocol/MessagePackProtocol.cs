@@ -231,6 +231,124 @@ namespace Axon.MessagePack
         {
             throw new NotImplementedException("Indeterminate values not supported at this time");
         }
+
+        public override RequestHeader ReadRequestStart()
+        {
+            var actionName = this.ReadStringValue();
+            var argumentCount = this.ReadIntegerValue();
+
+            return new RequestHeader(actionName, argumentCount);
+        }
+        public override void ReadRequestEnd()
+        {
+        }
+
+        public override RequestArgumentHeader ReadRequestArgumentStart()
+        {
+            var argumentName = this.ReadStringValue();
+            var type = this.ReadStringValue();
+
+            return new RequestArgumentHeader(argumentName, type);
+        }
+        public override void ReadRequestArgumentEnd()
+        {
+        }
+
+        public override ResponseHeader ReadResponseStart()
+        {
+            var success = this.ReadBooleanValue();
+            var type = this.ReadStringValue();
+            var argumentCount = this.ReadIntegerValue();
+
+            return new ResponseHeader(success, type, argumentCount);
+        }
+        public override void ReadResponseEnd()
+        {
+        }
+
+        public override ResponseArgumentHeader ReadResponseArgumentStart()
+        {
+            var argumentName = this.ReadStringValue();
+            var type = this.ReadStringValue();
+
+            return new ResponseArgumentHeader(argumentName, type);
+        }
+        public override void ReadResponseArgumentEnd()
+        {
+        }
+
+        public override ModelHeader ReadModelStart()
+        {
+            var modelName = this.ReadStringValue();
+            var propertyCount = this.ReadIntegerValue();
+
+            return new ModelHeader(modelName, propertyCount);
+        }
+        public override void ReadModelEnd()
+        {
+        }
+
+        public override ModelPropertyHeader ReadModelPropertyStart()
+        {
+            var propertyName = this.ReadStringValue();
+            var type = this.ReadStringValue();
+
+            return new ModelPropertyHeader(propertyName, type);
+        }
+        public override void ReadModelPropertyEnd()
+        {
+        }
+
+        public override ArrayHeader ReadArrayStart()
+        {
+            var itemCount = this.ReadIntegerValue();
+
+            return new ArrayHeader(itemCount);
+        }
+        public override void ReadArrayEnd()
+        {
+        }
+
+        public override ArrayItemHeader ReadArrayItemStart()
+        {
+            var type = this.ReadStringValue();
+
+            return new ArrayItemHeader(type);
+        }
+        public override void ReadArrayItemEnd()
+        {
+        }
+
+        public override DictionaryHeader ReadDictionaryStart()
+        {
+            var recordCount = this.ReadIntegerValue();
+
+            return new DictionaryHeader(recordCount);
+        }
+        public override void ReadDictionaryEnd()
+        {
+        }
+
+        public override DictionaryItemHeader ReadDictionaryItemStart()
+        {
+            var keyType = this.ReadStringValue();
+            var valueType = this.ReadStringValue();
+
+            return new DictionaryItemHeader(keyType, valueType);
+        }
+        public override void ReadDictionaryItemEnd()
+        {
+        }
+
+        public override IndefiniteValueHeader ReadIndefiniteValueStart()
+        {
+            var valueType = this.ReadStringValue();
+
+            return new IndefiniteValueHeader(valueType);
+        }
+        public override void ReadIndefiniteValueEnd()
+        {
+        }
     }
 
     public interface IMessagePackProtocolWriter : IProtocolWriter
@@ -288,6 +406,102 @@ namespace Axon.MessagePack
         public override void WriteIndeterminateValue(object value)
         {
             throw new NotImplementedException("Indeterminate values not supported at this time");
+        }
+
+        public override void WriteRequestStart(RequestHeader header)
+        {
+            this.WriteStringValue(header.ActionName);
+            this.WriteIntegerValue(header.ArgumentCount);
+        }
+        public override void WriteRequestEnd()
+        {
+        }
+
+        public override void WriteRequestArgumentStart(RequestArgumentHeader header)
+        {
+            this.WriteStringValue(header.ArgumentName);
+            this.WriteStringValue(header.Type);
+        }
+        public override void WriteRequestArgumentEnd()
+        {
+        }
+
+        public override void WriteResponseStart(ResponseHeader header)
+        {
+            this.WriteBooleanValue(header.Success);
+            this.WriteStringValue(header.Type);
+            this.WriteIntegerValue(header.ArgumentCount);
+        }
+        public override void WriteResponseEnd()
+        {
+        }
+
+        public override void WriteResponseArgumentStart(ResponseArgumentHeader header)
+        {
+            this.WriteStringValue(header.ArgumentName);
+            this.WriteStringValue(header.Type);
+        }
+        public override void WriteResponseArgumentEnd()
+        {
+        }
+
+        public override void WriteModelStart(ModelHeader header)
+        {
+            this.WriteStringValue(header.ModelName);
+            this.WriteIntegerValue(header.PropertyCount);
+        }
+        public override void WriteModelEnd()
+        {
+        }
+
+        public override void WriteModelPropertyStart(ModelPropertyHeader header)
+        {
+            this.WriteStringValue(header.PropertyName);
+            this.WriteStringValue(header.Type);
+        }
+        public override void WriteModelPropertyEnd()
+        {
+        }
+
+        public override void WriteArrayStart(ArrayHeader header)
+        {
+            this.WriteIntegerValue(header.ItemCount);
+        }
+        public override void WriteArrayEnd()
+        {
+        }
+
+        public override void WriteArrayItemStart(ArrayItemHeader header)
+        {
+            this.WriteStringValue(header.Type);
+        }
+        public override void WriteArrayItemEnd()
+        {
+        }
+
+        public override void WriteDictionaryStart(DictionaryHeader header)
+        {
+            this.WriteIntegerValue(header.RecordCount);
+        }
+        public override void WriteDictionaryEnd()
+        {
+        }
+
+        public override void WriteDictionaryItemStart(DictionaryItemHeader header)
+        {
+            this.WriteStringValue(header.KeyType);
+            this.WriteStringValue(header.ValueType);
+        }
+        public override void WriteDictionaryItemEnd()
+        {
+        }
+
+        public override void WriteIndefiniteValueStart(IndefiniteValueHeader header)
+        {
+            this.WriteStringValue(header.ValueType);
+        }
+        public override void WriteIndefiniteValueEnd()
+        {
         }
     }
 
